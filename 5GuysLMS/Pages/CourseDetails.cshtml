@@ -1,0 +1,168 @@
+﻿@page
+@model _5GuysLMS.Pages.CourseDetailsModel
+@{
+}
+
+<head>
+    <script src='https://cdn.plot.ly/plotly-2.4.2.min.js'></script>
+</head>
+
+<h1>Assignment Details</h1>
+<h2>@Model.currentAssignment.AssignmentTitle</h2>
+<h5>@Html.DisplayNameFor(model => model.currentAssignment.DueDate): @Model.currentAssignment.DueDate</h5>
+<h5>@Html.DisplayNameFor(model => model.currentAssignment.MaxPoints): @Model.currentAssignment.MaxPoints</h5>
+<p>@Html.DisplayNameFor(model => model.currentAssignment.Description): @Model.currentAssignment.Description</p>
+<h5>Submissions: </h5>
+
+@if (Model.currentAssignment.SubmissionType == "File")
+{
+    <div class="row">
+        <div class="col-lg-9 col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            File Name
+                        </th>
+                        <th>
+                            Graded
+                        </th>
+                        <th>
+                            Late
+                        </th>
+                        <th>
+                            Points Received
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FileSubmissions)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.fileName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsGraded)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsLate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PointsReceived)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-lg-9 col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Text Content
+                        </th>
+                        <th>
+                            Graded
+                        </th>
+                        <th>
+                            Late
+                        </th>
+                        <th>
+                            Points Received
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TextSubmissions)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TextContent)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsGraded)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsLate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PointsReceived)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="col-lg-9 col-12" id='myDiv'></div>
+
+<script>
+    var userScores = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UserScores));
+    var classScores = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ClassScores));
+
+    var highestScore = Math.max.apply(Math, userScores)
+
+    var data = [
+    {
+        x: classScores,
+        type: 'box',
+        name: 'Scores',
+        boxmean: true,
+        boxpoints: 'all',
+        jitter: 0.3,
+        pointpos: 0,
+        showlegend: false
+    },
+
+    {
+        x: [highestScore + 3],
+        y: [3],
+        name: 'Labels',
+        text: ['Your Score'],
+        mode: 'text',
+        showlegend: false
+    }
+
+    ];
+
+    var layout = {
+        title: 'Attempts',
+        hovermode: false,
+
+        yaxis: {
+            showticklabels: false
+        },
+
+        shapes: [
+            {
+                type: 'line',
+                x0: highestScore,
+                y0: -1,
+                x1: highestScore,
+                y1: 1,
+                line: {
+                    color: 'rgb(255, 0, 0)',
+                    width: 3
+                }
+            }
+        ]
+    };
+
+    Plotly.newPlot('myDiv', data, layout);
+
+</script>

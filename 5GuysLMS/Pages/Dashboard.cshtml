@@ -1,0 +1,90 @@
+﻿@page
+@model _5GuysLMS.Pages.DashboardModel
+
+@{
+    ViewData["Title"] = $"{Model.User.FirstName} {Model.User.LastName}'s Dashboard";
+}
+
+<h1 class="display-4">Dashboard</h1>
+
+<h3 class="my-3">Welcome @Model.User.FirstName @Model.User.LastName</h3>
+<hr />
+
+<div class="row">
+    @if (Model.User.UserType == "Instructor")
+    {
+        <div class="col-lg-9 col-12">
+            <div class="row" style="row-gap:20px">
+                @foreach (var item in Model.Courses)
+                {
+                    <div class="col-lg-6 col-12">
+                        <div class="card">
+                            <a asp-area="" asp-page="/CourseDashboard" asp-route-courseID="@item.Id" class="card-header card-link text-white bg-primary">@Html.DisplayFor(modelItem => item.CourseTitle)</a>
+                            <div class="card-body">
+                                <p>@Html.DisplayFor(modelItem => item.CourseDepartment) @Html.DisplayFor(modelItem => item.CourseNumber)</p>
+                                <p>@Html.DisplayFor(modelItem => item.Instructor.User.FirstName) @Html.DisplayFor(modelItem => item.Instructor.User.LastName)</p>
+                                <p>@Html.DisplayFor(modelItem => item.MeetingLocation)</p>
+                                <p>@Html.DisplayFor(modelItem => item.StartTimeAMPM) - @Html.DisplayFor(modelItem => item.EndTimeAMPM) @Html.DisplayFor(modelItem => item.MeetDays)</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-lg-9 col-12">
+            <div class="row" style="row-gap:20px">
+                @foreach (var item in Model.EnrolledCourses)
+                {
+                    <div class="col-lg-6 col-12">
+                        <div class="card">
+                            <a  asp-page="/CourseDashboardStudent" asp-route-courseID="@item.Course.Id" class="card-header card-link text-white bg-primary">@Html.DisplayFor(modelItem => item.Course.CourseTitle)</a>
+                            <div class="card-body">
+                                <p>@Html.DisplayFor(modelItem => item.Course.CourseDepartment) @Html.DisplayFor(modelItem => item.Course.CourseNumber)</p>
+                                <p>@Html.DisplayFor(modelItem => item.Course.Instructor.User.FirstName) @Html.DisplayFor(modelItem => item.Course.Instructor.User.LastName)</p>
+                                <p>@Html.DisplayFor(modelItem => item.Course.MeetingLocation)</p>
+                                <p>@Html.DisplayFor(modelItem => item.Course.StartTimeAMPM) - @Html.DisplayFor(modelItem => item.Course.EndTimeAMPM) @Html.DisplayFor(modelItem => item.Course.MeetDays)</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+<div class="col-lg-3 col-12 mt-lg-0 mt-3 text-right">
+    <h4>To Do</h4>
+    <hr />
+    <form>
+        <select class="form-control mb-3" asp-for="assignmentFilter" onchange="this.form.submit()">
+            <option value="Future">Upcoming</option>
+            <option value="Past">Past</option>
+        </select>
+    </form>
+    <div class="list-group">
+        @foreach (Models.Assignment item in Model.AssignmentsToDo)
+        {
+            if (Model.User.UserType == "Instructor") // The asp-page goes to the submissions page for the instructor
+            {
+                <a asp-area="" asp-page="/Submissions" asp-route-id="@item.Id" asp-route-courseID="@item.Course.Id" class="list-group-item list-group-item-action text-dark bg-light">
+                    @Html.DisplayFor(modelItem => item.Course.CourseDepartment) @Html.DisplayFor(modelItem => item.Course.CourseNumber) -
+                    @Html.DisplayFor(modelItem => item.AssignmentTitle)
+                    <br />
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </a>
+            }
+            else // The asp-page goes to the submit page for a student
+            {
+                <a asp-area="" asp-page="/SubmitAssignment" asp-route-courseID="@item.Course.Id" asp-route-assignmentID="@item.Id" class="list-group-item list-group-item-action text-dark bg-light">
+                    @Html.DisplayFor(modelItem => item.Course.CourseDepartment) @Html.DisplayFor(modelItem => item.Course.CourseNumber) -
+                    @Html.DisplayFor(modelItem => item.AssignmentTitle)
+                    <br />
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </a>
+            }
+        }
+    </div>
+</div>
+</div>

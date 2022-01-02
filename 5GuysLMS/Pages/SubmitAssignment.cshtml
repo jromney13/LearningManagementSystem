@@ -1,0 +1,34 @@
+﻿@page
+@model _5GuysLMS.Pages.SubmitAssignmentModel
+@{
+    ViewData["Title"] = "Submit Assignment";
+}
+
+<h1>Submit Assignment</h1>
+<h2>@Model.currentAssignment.AssignmentTitle</h2>
+<h5>@Html.DisplayNameFor(model => model.currentAssignment.DueDate): @Model.currentAssignment.DueDate</h5>
+<h5>@Html.DisplayNameFor(model => model.currentAssignment.MaxPoints): @Model.currentAssignment.MaxPoints</h5>
+<p>@Html.DisplayNameFor(model => model.currentAssignment.Description): @Model.currentAssignment.Description</p>
+
+<form method="post" enctype="multipart/form-data">
+    @*This is for text type submissions*@
+    @if (Model.currentAssignment.SubmissionType == "Text")
+    {
+        <div class="form-group">
+            <label class="col-form-label">Copy and paste or type your submission right here:</label>
+            <textarea class="form-control" rows="8" asp-for="currentTextSubmission.TextContent" required></textarea>
+
+        </div>
+
+    }
+    @*This is for file type submissions*@
+    else
+    {
+        <div class="form-group">
+            <label class="col-form-label">Upload your file here:</label>
+            <input type="file" class="form-control-file" asp-for="File">
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">Submit Assignment</button>
+</form>

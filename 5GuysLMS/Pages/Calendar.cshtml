@@ -1,0 +1,151 @@
+﻿@page
+@model _5GuysLMS.Pages.CalendarModel
+@{ ViewData["Title"] = "Calendar"; }
+@section styles {
+    <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+    <script src='https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'></script>
+    <link rel="stylesheet" href="@Url.Content("~/calendar/Calendar.css")" />
+}
+@section scripts {
+    <script type="text/javascript">
+        let ev = [];
+        let eID = [];
+
+        function addclass(iId, iTitle, iStartTime, iEndTime, days) {
+            let d = [];
+
+            for (let i = 0; i < days.length; i++) {
+                switch (days[i].toUpperCase()) {
+                    case ('M'):
+                        d.push(1);
+                        break;
+                    case ('T'):
+                        d.push(2);
+                        break;
+                    case ('W'):
+                        d.push(3);
+                        break;
+                    case ('R'):
+                        d.push(4);
+                        break;
+                    case ('F'):
+                        d.push(5);
+                        break;
+                }
+            }
+
+            let e = {
+                id: iId,
+                title: iStartTime + " " + iTitle,
+                startRecur: '2021-08-31',
+                endRecur: '2022-01-01',
+                daysOfWeek: d,
+                description: 'Test',
+                allDay: true
+            }
+
+            eID.push(iId);
+            ev.push(e);
+        };
+
+        function addAssign(iId, iTitle, iDate, iurl) {
+            let e = {
+                id: iId,
+                title: iTitle,
+                start: iDate,
+                url: iurl,
+                allDay: false
+            }
+
+            eID.push(iId);
+            ev.push(e);
+        };
+
+        function renderCal() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                displayEventTime: false,
+                eventDidMount: function (info) {
+                    var tooltip = new Tooltip(info.el, {
+                        title: info.event.id,
+                        placement: 'top',
+                        trigger: 'hover',
+                        container: 'body'
+                    });
+                },
+                events: ev
+            });
+
+            calendar.render();
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            //addclass('1', 'STest', '01:00', '02:00', 'MWF');
+            //addAssign('2', 'Sa', '2021-10-01', '');
+
+            @if (Model.user.UserType == "Instructor")
+                {
+                    @foreach (var item in Model.courses)
+                    {
+                        @Html.Raw("addclass('")
+                        @Html.DisplayFor(modelItem => item.Id)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.CourseDepartment)
+                        @Html.Raw(" ")
+                        @Html.DisplayFor(modelItem => item.CourseNumber)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.StartTimeAMPM)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.MeetDays)
+                        @Html.Raw("');")
+                    }
+                }
+                else
+                {
+                    @foreach (var item in Model.enrollments)
+                    {
+                        @Html.Raw("addclass('")
+                        @Html.DisplayFor(modelItem => item.Id)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.Course.CourseDepartment)
+                        @Html.Raw(" ")
+                        @Html.DisplayFor(modelItem => item.Course.CourseNumber)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.Course.StartTimeAMPM)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.Course.EndTime)
+                        @Html.Raw("', '")
+                        @Html.DisplayFor(modelItem => item.Course.MeetDays)
+                        @Html.Raw("');")
+                    }
+                }
+            @foreach (var item in Model.assignments)
+                {
+                    @Html.Raw("addAssign('")
+                    @Html.DisplayFor(modelItem => item.Id)
+                    @Html.Raw("', '")
+                    @Html.DisplayFor(modelItem => item.Course.CourseDepartment)
+                    @Html.Raw(" ")
+                    @Html.DisplayFor(modelItem => item.Course.CourseNumber)
+                    @Html.Raw(" ")
+                    @Html.DisplayFor(modelItem => item.AssignmentTitle)
+                    @Html.Raw("', '")
+                    @Html.DisplayFor(modelItem => item.DueDate.Year)
+                    @Html.Raw("-")
+                    @Html.DisplayFor(modelItem => item.DueDate.Month)
+                    @Html.Raw("-")
+                    @Html.DisplayFor(modelItem => item.DueDate.Day)
+                    @Html.Raw("', '');")
+                }
+            renderCal();
+        });
+    </script>
+}
+
+<div style="width: 90%">
+    <div id="calendar"></div>
+</div>
+

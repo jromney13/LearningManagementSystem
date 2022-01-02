@@ -1,0 +1,53 @@
+﻿@page
+@model _5GuysLMS.Pages.TuitionModel
+@{
+}
+
+
+<div class="col-md-6 offset-md-3">
+    <span class="anchor" id="formPayment"></span>
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center"><h2>Amount Owed: $@Model.owed</h2></div>
+        </div>
+    </div>
+    <hr class="my-5">
+
+    <!-- form card cc payment -->
+    @if (Model.owed <= 0)
+    {
+
+
+        <div class="text-center"><h2>@Model.message</h2></div>
+        <div class="text-center"><h1 class="alert-success">No Payment Owed</h1></div>
+
+    }
+    else
+    {
+
+        <div class="card card-outline-secondary">
+            <div class="card-body">
+                <h3 class="text-center">Credit Card Payment</h3>
+                <hr>
+                <form method="post" asp-page-handler="payment">
+                    <label >First Name</label><br />
+                    <input /><br />
+                    <label>Last Name</label><br />
+                    <input /><br />
+                    <label>Card Number</label><br />
+                    <input asp-for="ccn" /><br />
+                    <label>Expiration Month</label><br />
+                    <input asp-for="expMonth" /><br />
+                    <label>Expiration Year</label><br />
+                    <input asp-for="expYear" /><br />
+                    <label>CVC</label><br />
+                    <input asp-for="cvc" /><br />
+                    <label>Amount</label><br />
+                    <input asp-for="amount" /><br /><br />
+                    <button>Submit</button>
+                </form>
+            </div>
+        </div>
+    }
+
+</div>

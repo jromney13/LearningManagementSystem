@@ -1,0 +1,26 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="row text-center pt-5">
+    <div class="col-sm align-self-center">
+        <h1 class="display-4">Welcome</h1>
+    </div>
+    <div class="col-sm align-self-center">
+        <div>
+            Enter your email and password below to sign in.
+            <br />
+            Don't have an account? Click <a href="/Register">here</a> to register!
+        </div>
+        <form method="post" class="mt-4">
+            <input type="email" asp-for="EmailInput" class="form-control" placeholder="Email" />
+            <input type="password" asp-for="PasswordInput" class="form-control mt-3" placeholder="Password"/>
+            <p class="text-danger">@Model.InvalidLoginMessage</p>
+            <a href="/AccountRecovery" class="d-table-row small">Forgot your password?</a>
+            <input type="submit" class="btn btn-primary mt-3" value="Sign in" id="SignInButton" />
+        </form>
+    </div>
+</div>
+

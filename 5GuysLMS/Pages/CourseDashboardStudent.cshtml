@@ -1,0 +1,138 @@
+﻿@page
+@model _5GuysLMS.Pages.CourseDashboardStudentModel
+@{
+}
+
+
+<head>
+    <script src='https://cdn.plot.ly/plotly-2.4.2.min.js'></script>
+</head>
+
+<h1>Course Dashboard</h1>
+
+<div class="row">
+    <div class="col-lg-4 col-12" style="margin-top:100px">
+        <h2>@Model.currentCourse.CourseDepartment @Model.currentCourse.CourseNumber</h2>
+        <h2>@Model.currentCourse.CourseTitle</h2>
+        <br/>
+        <h2>Grade: @Model.letterGrade @Model.gradePercentage</h2>
+    </div>
+    <div class="col-lg-6 col-12" style="height:400px" id='myDiv'></div>
+</div>
+
+<br />
+
+<h2>Assignments</h2>
+
+<div class="row">
+    <div class="col-lg-9 col-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Assignments[0].AssignmentTitle)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Assignments[0].Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Assignments[0].DueDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Assignments[0].MaxPoints)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Assignments[0].SubmissionType)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Assignments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssignmentTitle)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DueDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MaxPoints)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubmissionType)
+                        </td>
+                        <td>
+                            <a asp-page="/SubmitAssignment" asp-route-courseID="@item.Course.Id" asp-route-assignmentID="@item.Id" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
+                        </td>
+                        <td>
+                            <a asp-page="/CourseDetails" asp-route-courseID="@item.Course.Id" asp-route-assignmentID="@item.Id" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Details</a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+<script>
+    var classScores = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.studentPercentages));
+
+    var grade = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.grade));
+
+    var data = [
+    {
+        x: classScores,
+        type: 'box',
+        name: 'Scores',
+        boxmean: true,
+        boxpoints: 'all',
+        jitter: 0.3,
+        pointpos: 0,
+        showlegend: false
+    },
+
+    {
+        x: [grade],
+        y: [3],
+        name: 'Labels',
+        text: ['You'],
+        mode: 'text',
+        showlegend: false
+    }
+
+    ];
+
+    var layout = {
+        title: 'Class Ranking',
+        hovermode: false,
+
+        yaxis: {
+            showticklabels: false
+        },
+
+        shapes: [
+            {
+                type: 'line',
+                x0: grade,
+                y0: -1,
+                x1: grade,
+                y1: 1,
+                line: {
+                    color: 'rgb(255, 0, 0)',
+                    width: 3
+                }
+            }
+        ]
+    };
+
+    Plotly.newPlot('myDiv', data, layout);
+
+</script>

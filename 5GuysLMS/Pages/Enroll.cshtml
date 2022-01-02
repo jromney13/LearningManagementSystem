@@ -1,0 +1,117 @@
+﻿@page
+@model _5GuysLMS.Pages.EnrollModel
+
+@{
+    ViewData["Title"] = "Enroll";
+}
+
+<h1>Enroll</h1>
+
+<br />
+<form class="form-inline">
+    <input class="form-control mr-sm-2" type="text" placeholder="Search Course Title" asp-for="SearchInput">
+    <select class="form-control" asp-for="DropDownInput" asp-items="Html.GetEnumSelectList<Departments>()">
+        <option value="" selected>Choose a Department</option>
+    </select>
+    <button class="btn btn-info my-2 my-sm-0" type="submit" style="margin:10px">Search</button>
+</form>
+<br />
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].CourseNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].CourseDepartment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].CourseTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].CourseDesc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].MeetDays)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].MeetingLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Course[0].CreditHours)
+            </th>
+            <th>
+                Instructor
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Course)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseDepartment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseDesc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeetDays)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeetingLocation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTimeAMPM)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTimeAMPM)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditHours)
+                </td>
+                <td>
+                    @{string fullName = item.Instructor.User.getFullName(); }
+                    @Html.DisplayFor(modelItem => fullName)
+                </td>
+                <td>
+
+                    @{ //if user is enrolled in this particular course
+                        if (Model.EnrolledCourses.Where(e => e.Course == item).FirstOrDefault() == default)
+                        {
+                            //render enroll button
+                            <form asp-page-handler="enroll" method="post">
+                                <input type="hidden" name="CourseID" value="@item.Id" />
+                                <button class="btn btn-info">Enroll</button>
+                            </form>
+                        }
+                        else
+                        {
+                            //render drop button
+                            <form asp-page-handler="drop" method="post">
+                                <input type="hidden" name="CourseID" value="@item.Id" />
+                                <button class="btn btn-danger">Drop</button>
+                            </form>
+                        }
+
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

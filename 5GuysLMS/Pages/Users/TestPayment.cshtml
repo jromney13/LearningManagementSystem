@@ -1,0 +1,22 @@
+﻿@page
+@model _5GuysLMS.Pages.Users.TestPaymentModel
+@{
+
+    <form method="post" asp-page-handler="payment">
+        <label>Card Number</label><br />
+        <input asp-for="cardNumber" /><br />
+        <label>Expiration Month</label><br />
+        <input asp-for="expMonth" /><br />
+        <label>Expiration Year</label><br />
+        <input asp-for="expYear" /><br />
+        <label>CVC</label><br />
+        <input asp-for="cvc" /><br />
+        <label>Amount</label><br />
+        <input asp-for="amount" /><br /><br />
+        <button>Submit</button>
+    </form>
+
+    <h3>@Model.message</h3>
+
+
+}

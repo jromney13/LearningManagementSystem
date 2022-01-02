@@ -1,0 +1,211 @@
+﻿@page
+@model _5GuysLMS.Pages.ProfileModel
+
+@{
+    ViewData["Title"] = $"{Model.EditedUser.FirstName} {Model.EditedUser.LastName}'s Profile";
+}
+
+
+
+<section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card">
+                    <div class="rounded-top text-black d-flex flex-row" style="background-color: #add8e6; height:200px;">
+                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                            @*<img src="@Model.EditedUser.ProfilePicture.GenerateURL()" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1">*@
+                        </div>
+                        <div class="ms-3" style="margin-top: 130px;">
+                            <h2>@Model.EditedUser.FirstName @Model.EditedUser.LastName</h2>
+                            <p>@Model.EditedUser.EmailAddress</p>
+                        </div>
+                    </div>
+                    <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                        <p>Phone: @Model.EditedUser.Phone</p>
+                        <p>Date of Birth: @Model.EditedUser.Birthday.ToShortDateString()</p>
+                    </div>
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">Bio</p>
+                            <div class="p-4" style="background-color: #f8f9fa;">
+                                @if (Model.EditedUser.Bio == null)
+                                {
+                                    <div class="text-center"><h3 class="alert-info">No Bio Set</h3></div>
+
+                                }
+                                else
+                                {
+                                    <p class="font-italic mb-1">@Model.EditedUser.Bio</p>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">Address</p>
+                            <div class="p-4" style="background-color: #f8f9fa;">
+                                <p class="font-weight-normal mb-1">@Model.EditedUser.AddressLineOne</p>
+                                <p class="font-weight-normal mb-1">@Model.EditedUser.AddressLineTwo</p>
+                                <p class="font-weight-normal mb-1">City: @Model.EditedUser.City</p>
+                                <p class="font-weight-normal mb-1">State: @Model.EditedUser.State</p>
+                                <p class="font-weight-normal mb-1">zip: @Model.EditedUser.Zip </p>
+                            </div>
+                        </div>
+                        <div class="mb-5">
+                            <p class="lead fw-normal mb-1">Links</p>
+                            @if (Model.EditedUser.LinkOne == null
+                            && Model.EditedUser.LinkTwo == null
+                            && Model.EditedUser.LinkThree == null)
+                            {
+                                <div class="text-center"><h3 class="alert-info">No Links Added</h3></div>
+                            }
+                            else
+                            {
+                                <div class="p-4" style="background-color: #f8f9fa;">
+                                    <p><a href="@Model.EditedUser.LinkOne" target="_blank">@Model.EditedUser.LinkOne</a> </p>
+                                    <p><a href="@Model.EditedUser.LinkTwo" target="_blank">@Model.EditedUser.LinkTwo</a></p>
+                                    <p><a href="@Model.EditedUser.LinkThree" target="_blank">@Model.EditedUser.LinkThree</a></p>
+                                </div>
+                            }
+
+                        </div>
+
+
+
+                        <!--Edit Profile-->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label for="recipient-profilePicture" class="col-form-label">Profile Picture:</label>
+                                                <input type="file" class="form-control-file" id="recipient-profilePicture" asp-for="UploadedFile">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-firstName" class="col-form-label">First Name:</label>
+                                                <input type="text" class="form-control" id="recipient-firstName" asp-for="EditedUser.FirstName" value="@Model.EditedUser.FirstName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-lastName" class="col-form-label">Last Name:</label>
+                                                <input type="text" class="form-control" id="user-lastName" asp-for="EditedUser.LastName" value="@Model.EditedUser.LastName">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-birthday" class="col-form-label">Birthdate:</label>
+                                                <input type="date" class="form-control" id="user-lastName" asp-for="EditedUser.Birthday" value="@Model.EditedUser.Birthday">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-address1" class="col-form-label">Address 1:</label>
+                                                <input type="text" class="form-control" id="user-address1" asp-for="EditedUser.AddressLineOne" value="@Model.EditedUser.AddressLineOne">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-address2" class="col-form-label">Address 2:</label>
+                                                <input type="text" class="form-control" id="user-address2" asp-for="EditedUser.AddressLineTwo" value="@Model.EditedUser.AddressLineTwo">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-city" class="col-form-label">City:</label>
+                                                <input type="text" class="form-control" id="user-city" asp-for="EditedUser.City" value="@Model.EditedUser.City">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-state" class="col-form-label">State:</label>
+                                                <input type="text" class="form-control" id="user-state" asp-for="EditedUser.State" value="@Model.EditedUser.State">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-zip" class="col-form-label">Zip:</label>
+                                                <input type="text" class="form-control" id="user-zip" pattern="\d*" minlength="5" maxlength="5" asp-for="EditedUser.Zip" value="@Model.EditedUser.Zip" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-phone" class="col-form-label">Phone:</label>
+                                                <input type="text" class="form-control" id="user-phone" minLength="7" maxlength="7" asp-for="EditedUser.Phone" value="@Model.EditedUser.Phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message-bio" class="col-form-label">Bio:</label>
+                                                <textarea class="form-control" id="user-bio" asp-for="EditedUser.Bio" value="@Model.EditedUser.Bio">@*Removed Tag helper here. Not sure what it was or why it was broken*@</textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-link1" class="col-form-label">Link 1:</label>
+                                                <input type="text" class="form-control" id="recipient-link1" asp-for="EditedUser.LinkOne" value="@Model.EditedUser.LinkOne">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-link2" class="col-form-label">Link 2:</label>
+                                                <input type="text" class="form-control" id="recipient-link2" asp-for="EditedUser.LinkTwo" value="@Model.EditedUser.LinkTwo">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="recipient-link3" class="col-form-label">Link 3:</label>
+                                                <input type="text" class="form-control" id="recipient-link3" asp-for="EditedUser.LinkThree" value="@Model.EditedUser.LinkThree">
+                                            </div>
+
+                                            <div class="d-flex flex-row-reverse bd-highlight">
+                                                <button type="submit" class="btn btn-primary mt-3 ml-3 mr-3">Save</button>
+                                                <button type="button" class="btn btn-secondary mt-3 ml-3 mr-3" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" form="myModal" class="btn btn-primary"  >yep </button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Security Questions Modal-->
+                        <div class="modal fade" id="securityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Set up your security questions</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label for="security-question1" class="col-form-label">Question 1:</label>
+                                                <select asp-for="SecurityQuestionID1" asp-items="Model.SecurityQuestions" class="form-control" id="security-question1"></select>
+                                                <label for="security-answer1" class="col-form-label">Answer 1:</label>
+                                                <input type="text" class="form-control" id="security-answer1" asp-for="EditedSecurityQuestionAnswer1.QuestionAnswer" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="security-question2" class="col-form-label">Question 2:</label>
+                                                <select asp-for="SecurityQuestionID2" asp-items="Model.SecurityQuestions" class="form-control" id="security-question2"></select>
+                                                <label for="security-answer2" class="col-form-label">Answer 2:</label>
+                                                <input type="text" class="form-control" id="security-answer2" asp-for="EditedSecurityQuestionAnswer2.QuestionAnswer" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="security-question3" class="col-form-label">Question 3:</label>
+                                                <select asp-for="SecurityQuestionID3" asp-items="Model.SecurityQuestions" class="form-control" id="security-question3"></select>
+                                                <label for="security-answer3" class="col-form-label">Answer 3:</label>
+                                                <input type="text" class="form-control" id="security-answer3" asp-for="EditedSecurityQuestionAnswer3.QuestionAnswer" required>
+                                            </div>
+                                            <div class="d-flex flex-row-reverse bd-highlight">
+                                                <button type="submit" class="btn btn-primary mt-3 ml-3 mr-3">Save</button>
+                                                <button type="button" class="btn btn-secondary mt-3 ml-3 mr-3" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" data-toggle="modal" data-target="#myModal">Edit</a>
+                        <br />
+                        <a href="#" data-toggle="modal" data-target="#securityModal">Set up security questions</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+
+
+
+
+

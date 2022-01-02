@@ -1,0 +1,61 @@
+﻿@page
+@model _5GuysLMS.Pages.RegisterModel
+
+@{ ViewData["Title"] = "Register"; }
+
+<div class="row pt-5">
+    <div class="col-sm text-center align-self-center">
+        <h1 class="display-4">Register</h1>
+    </div>
+    <div class="col-sm align-self-center">
+        <div class="text-center">
+            Enter your information below to create an account.
+        </div>
+        <form method="post" class="mt-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group d-flex">
+                <label asp-for="User.FirstName" class="col-form-label w-50"></label>
+                <input asp-for="User.FirstName" class="form-control" />
+            </div>
+            <span asp-validation-for="User.FirstName" class="text-danger"></span>
+            <div class="form-group d-flex">
+                <label asp-for="User.LastName" class="col-form-label w-50"></label>
+                <input asp-for="User.LastName" class="form-control" />
+            </div>
+            <span asp-validation-for="User.LastName" class="text-danger"></span>
+            <div class="form-group d-flex">
+                <label asp-for="User.EmailAddress" class="col-form-label w-50"></label>
+                <input asp-for="User.EmailAddress" class="form-control" />
+            </div>
+            <span asp-validation-for="User.EmailAddress" class="text-danger"></span>
+            <div class="form-group d-flex">
+                <label class="col-form-label w-50">Password</label>
+                <input type="password" class="form-control" asp-for="PasswordInput" />
+            </div>
+            <div class="form-group d-flex">
+                <label class="col-form-label w-50">Confirm Password</label>
+                <input type="password" class="form-control" asp-for="ConfirmPasswordInput" />
+            </div>
+            <div class="form-group d-flex">
+                <label asp-for="User.Birthday" class="col-form-label w-50"></label>
+                <input asp-for="User.Birthday" class="form-control" />
+            </div>
+            <span asp-validation-for="User.Birthday" class="text-danger"></span>
+            <div class="form-group d-flex">
+                <label class="col-form-label w-50">Student or Instructor</label>
+                <select asp-for="User.UserType" class="form-control">
+                    <option value="Student">Student</option>
+                    <option value="Instructor">Instructor</option>
+                </select>
+            </div>
+            <div class="form-group text-center mt-3">
+                <p class="text-danger">@Model.InvalidFormMessage</p>
+                <input type="submit" value="Register" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

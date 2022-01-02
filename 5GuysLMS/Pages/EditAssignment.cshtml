@@ -1,0 +1,46 @@
+﻿@page
+@model _5GuysLMS.Pages.EditAssignmentModel
+@{
+}
+<h1 class="col-md-8 offset-md-2">Edit Assignment</h1>
+<br />
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="col-form-label">AssignmentTitle:</label>
+                <input type="text" class="form-control" asp-for="assignment.AssignmentTitle" required>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">SubmissionType:</label>
+                <select class="form-control" asp-for="assignment.SubmissionType" required>
+                    <option value="@SubmissionTypes.File.ToString()">@SubmissionTypes.File.ToString()</option>
+                    <option value="@SubmissionTypes.Text.ToString()">@SubmissionTypes.Text.ToString()</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">Description:</label>
+                <textarea class="form-control" asp-for="assignment.Description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">.MaxPoints:</label>
+                <input type="number" min="0" value="@Model.assignment.MaxPoints" class="form-control" asp-for="assignment.MaxPoints" required>
+            </div>
+            <div class="form-group">
+                <label class="col-form-label">DueDate:</label>
+                <input type="datetime-local" class="form-control" asp-for="assignment.DueDate" required>
+            </div>
+            <div class="form-group" style="position: absolute; visibility: hidden">
+                <label for="recipient-editId" class="col-form-label">Id</label>
+                <input type="text" class="form-control" asp-for="assignment.Id" value="@Model.assignment.Id" />
+                <label for="recipient-editId" class="col-form-label">courseId</label>
+                <input type="text" class="form-control" asp-for="courseid" value="@Model.courseid" />
+            </div>
+
+            <div class="d-flex flex-row-reverse bd-highlight">
+                <button asp-route-courseId="@Model.courseid" type="submit" class="btn btn-primary mt-3 ml-3 mr-3">Save</button>
+                <a asp-page="/CourseDashboard" asp-route-courseId="@Model.courseid" class="btn btn-secondary mt-3 ml-3 mr-3" role="button">Back</a>
+            </div>
+        </form>
+    </div>
+</div>

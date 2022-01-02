@@ -1,0 +1,42 @@
+﻿@page
+@model _5GuysLMS.Pages.ChartModel
+@{
+}
+<head>
+    <script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
+</head>
+<body>
+
+    <h2> How are Student's Doing In This Course? </h2>
+    <div>
+        <a asp-page="/CourseDashboard" asp-route-courseId="@Model.course.Id" class="btn btn-secondary mt-3 ml-3 mr-3" role="button">Back</a>
+    </div>
+    
+    <div id="scores"></div>
+    <script src="pie.js"></script>
+
+</body>
+
+<script>
+
+    var classScores = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.gradeGroup));
+    var classNames = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.students));
+
+    var data = [{
+        values: classScores,
+        labels: ["A", "B", "C", "D", "F"],
+        textinfo: "label+percent",
+        type: 'pie',
+
+    }];
+
+    var layout = {
+        height: 600,
+        width: 800,
+        title: 'Students Letter Grades'
+    }
+
+    Plotly.newPlot('scores', data, layout);
+
+
+</script>

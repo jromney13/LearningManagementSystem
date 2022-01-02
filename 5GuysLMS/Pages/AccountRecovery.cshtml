@@ -1,0 +1,25 @@
+﻿@page
+@model AccountRecoveryModel
+@{
+    ViewData["Title"] = "Account Recovery";
+}
+<div class="row text-center">
+    <div class="col-md-8 mx-auto">
+        <h1 class="display-3 my-5">Account Recovery</h1>
+        @if (Model.SecurityQuestionAnswers == default)
+        {
+            <p>You may use security questions to reset your password if you have them set up.</p>
+            <p>Enter your email in the text box below to check if you have security questions set up.</p>
+            <form method="post">
+                <input type="text" asp-for="EmailInput" class="form-control" />
+                <p class="text-danger">@Model.ErrorMessage</p>
+                <input type="submit" class="btn btn-primary mt-3" value="Submit" />
+            </form>
+        }
+        else
+        {
+            <p class="text-danger">We are sorry, but you have not set up your security questions, so you are not eligible to reset your password.</p>
+            <a href="/AccountRecovery" class="btn btn-warning">Back</a>
+        }
+    </div>
+</div>

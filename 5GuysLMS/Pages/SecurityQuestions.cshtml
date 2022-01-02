@@ -1,0 +1,22 @@
+﻿@page
+@model _5GuysLMS.Pages.SecurityQuestionsModel
+@{
+    ViewData["Title"] = "Security Questions";
+}
+
+<div class="row text-center">
+    <div class="col-md-8 mx-auto">
+        <h1 class="display-3 my-5">Security Questions</h1>
+        <p>Answer the security questions below in order to reset your password.</p>
+        <form method="post">
+            <label class="col-form-label mt-2">@Model.SecurityQuestions[0].QuestionContent:</label>
+            <input type="text" asp-for="AnswerInput1" class="form-control" />
+            <label class="col-form-label mt-2">@Model.SecurityQuestions[1].QuestionContent:</label>
+            <input type="text" asp-for="AnswerInput2" class="form-control" />
+            <label class="col-form-label mt-2">@Model.SecurityQuestions[2].QuestionContent:</label>
+            <input type="text" asp-for="AnswerInput3" class="form-control" />
+            <p class="text-danger">@Model.ErrorMessage</p>
+            <input type="submit" class="btn btn-primary mt-3" value="Submit" />
+        </form>
+    </div>
+</div>

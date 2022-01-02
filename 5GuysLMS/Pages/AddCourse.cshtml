@@ -1,0 +1,202 @@
+﻿@page
+@model _5GuysLMS.Pages.AddCourseModel
+@{
+}
+
+
+<div>
+    <h4>Teaching List </h4>
+    <hr />
+
+    @*This list of courses is dummy data. This block of code will be replace with the foreach loop below it when we populate the instructor table and courses*@
+<div class="list-group">
+ 
+    @*This foreach loop will populate the course lists when we have an instructors in the database*@
+
+    @if (@Model.instructor.Courses != null)
+    {
+        foreach (var item in @Model.instructor.Courses)
+        {
+           
+            <div class="list-group-item list-group-item-action text-dark bg-light">
+                <b>@item.CourseDepartment @item.CourseNumber - @item.CourseTitle</b>
+                <br />
+                @item.MeetingLocation
+                <br />
+                @item.MeetDays @item.StartTimeAMPM - @item.EndTimeAMPM
+                <br />
+                Credit Hours: @item.CreditHours
+                <br /> <br />
+                Description:
+                <br />
+                <p>
+                    @item.CourseDesc
+                <p>
+                    <br />
+                    <div>
+                        <form method="post">
+                            <button asp-page-handler="Delete" asp-route-Id="@item.Id" type="submit" class="btn btn-secondary btn-danger btn-sm float-right ml-3">Delete</button>
+                            <a asp-page="/EditCourse" asp-route-courseID="@item.Id" class="btn btn-primary btn-sm float-right" role="button">Edit</a>
+                            
+                        </form>
+                    </div>
+
+            </div>
+        }
+    }
+</div>
+
+
+
+
+    @*This button brings up the add new course modal*@
+    <button type="button" class="btn btn-primary btn-lg mt-5" data-toggle="modal" data-target="#myModalCreate">Add Course</button>
+
+    @*This block of code is the edit modal. 
+        This is not used. It's here if we have time to figure out how to populate the modal with the course's attributes that was choosen
+        We use the modal for to add courses so figuring this out would add consistency*@
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Class</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="recipient-editDepartmentEdit" class="col-form-label">Class Department:</label>
+                            <select class="form-control">
+                                <option value="@Departments.CS.ToString()">@Departments.CS.ToString()</option>
+                                <option value="@Departments.ENGL.ToString()">@Departments.ENGL.ToString()</option>
+                                <option value="@Departments.MATH.ToString()">@Departments.MATH.ToString()</option>
+                                <option value="@Departments.PHYS.ToString()">@Departments.PHYS.ToString()</option>
+                                <option value="@Departments.WEB.ToString()">@Departments.WEB.ToString()</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editClassNumber" class="col-form-label">Course Number:</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editCourseTitle" class="col-form-label">Course Title:</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-editDescription" class="col-form-label">Description:</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editMeetingDays" class="col-form-label">Meeting Days:</label>
+                            <select class="form-control">
+                                <option value="MW">Monday and Wednesday</option>
+                                <option value="MWF">Monday, Wednesday, and Friday</option>
+                                <option value="TR">Tuesday and Thursday</option>
+                                <option value="F">Friday</option>
+                                <option value="MTWRF">Monday, Tuesday, Wednesday, Thursday, and Friday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editMeetingLocation" class="col-form-label">Meeting Location:</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editStartingHour" class="col-form-label">Starting Hour:</label>
+                            <input type="time" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editEndingHour" class="col-form-label">Ending Hour:</label>
+                            <input type="time" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-editCredithours" class="col-form-label">Credit Hours:</label>
+                            <input type="number" min="2" max="5" value="3" class="form-control" />
+                        </div>
+
+
+                        <div class="d-flex flex-row-reverse bd-highlight">
+                            <button type="submit" class="btn btn-primary mt-3 ml-3 mr-3">Save</button>
+                            <button type="button" class="btn btn-secondary mt-3 ml-3 mr-3" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*This block of code is the add course modal*@
+    <div class="modal fade" id="myModalCreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create Class</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="recipient-department" class="col-form-label">Class Department:</label>
+                            <select class="form-control" asp-for="AddedCourse.CourseDepartment" required>
+                                <option value="@Departments.CS.ToString()">@Departments.CS.ToString()</option>
+                                <option value="@Departments.ENGL.ToString()">@Departments.ENGL.ToString()</option>
+                                <option value="@Departments.MATH.ToString()">@Departments.MATH.ToString()</option>
+                                <option value="@Departments.PHYS.ToString()">@Departments.PHYS.ToString()</option>
+                                <option value="@Departments.WEB.ToString()">@Departments.WEB.ToString()</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-ClassNumber" class="col-form-label">Class Number:</label>
+                            <input type="text" class="form-control" asp-for="AddedCourse.CourseNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-title" class="col-form-label">Class Title:</label>
+                            <input type="text" class="form-control" asp-for="AddedCourse.CourseTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" asp-for="AddedCourse.CourseDesc" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-meetingDays" class="col-form-label">Meeting Days:</label>
+                            <select class="form-control" asp-for="AddedCourse.MeetDays" required>
+                                <option value="MW">Monday and Wednesday</option>
+                                <option value="MWF">Monday, Wednesday, and Friday</option>
+                                <option value="TR">Tuesday and Thursday</option>
+                                <option value="F">Friday</option>
+                                <option value="MTWRF">Monday, Tuesday, Wednesday, Thursday, and Friday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-meetingLocation" class="col-form-label">Meeting Location:</label>
+                            <input type="text" class="form-control" asp-for="AddedCourse.MeetingLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-startingHour" class="col-form-label">Starting Hour:</label>
+                            <input type="time" class="form-control" asp-for="AddedCourse.StartTime" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-endingHour" class="col-form-label">Ending Hour:</label>
+                            <input type="time" class="form-control" value="HH:MM AM" asp-for="AddedCourse.EndTime" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-creditHours" class="col-form-label">Credit Hours:</label>
+                            <input type="number" min="2" max="5" value="3" asp-for="AddedCourse.CreditHours" class="form-control" required/>
+                        </div>
+
+
+                        <div class="d-flex flex-row-reverse bd-highlight">
+                            <button type="submit" class="btn btn-primary mt-3 ml-3 mr-3">Create Class</button>
+                            <button type="button" class="btn btn-secondary mt-3 ml-3 mr-3" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿@page
+@model _5GuysLMS.Pages.EditCourseModel
+@{
+}
+<h1 class="col-md-8 offset-md-2">Edit Course</h1>
+<br />
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="recipient-editDepartmentEdit" class="col-form-label">Class Department:</label>
+                <select class="form-control" asp-for="currentCourse.CourseDepartment">
+                    <option value="@Departments.CS.ToString()">@Departments.CS.ToString()</option>
+                    <option value="@Departments.ENGL.ToString()">@Departments.ENGL.ToString()</option>
+                    <option value="@Departments.MATH.ToString()">@Departments.MATH.ToString()</option>
+                    <option value="@Departments.PHYS.ToString()">@Departments.PHYS.ToString()</option>
+                    <option value="@Departments.WEB.ToString()">@Departments.WEB.ToString()</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="recipient-editClassNumber" class="col-form-label">Course Number:</label>
+                <input type="text" class="form-control" asp-for="currentCourse.CourseNumber" value="@Model.currentCourse.CourseNumber">
+            </div>
+            <div class="form-group">
+                <label for="recipient-editCourseTitle" class="col-form-label">Course Title:</label>
+                <input type="text" class="form-control" asp-for="currentCourse.CourseTitle" value="@Model.currentCourse.CourseTitle">
+            </div>
+            <div class="form-group">
+                <label for="message-editDescription" class="col-form-label">Description:</label>
+                <textarea class="form-control" asp-for="currentCourse.CourseDesc" value="@Model.currentCourse.CourseDesc"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="recipient-editMeetingDays" class="col-form-label">Meeting Days:</label>
+                <select class="form-control" asp-for="currentCourse.MeetDays" value="@Model.currentCourse.MeetDays">
+                    <option value="MW">Monday and Wednesday</option>
+                    <option value="MWF">Monday, Wednesday, and Friday</option>
+                    <option value="TR">Tuesday and Thursday</option>
+                    <option value="F">Friday</option>
+                    <option value="MTWRF">Monday, Tuesday, Wednesday, Thursday, and Friday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="recipient-editMeetingLocation" class="col-form-label">Meeting Location:</label>
+                <input type="text" class="form-control" asp-for="currentCourse.MeetingLocation" value="@Model.currentCourse.MeetingLocation">
+            </div>
+            <div class="form-group">
+                <label for="recipient-editStartingHour" class="col-form-label">Starting Hour:</label>
+                <input type="time" class="form-control" asp-for="currentCourse.StartTime" value="@Model.currentCourse.StartTime" />
+            </div>
+            <div class="form-group">
+                <label for="recipient-editEndingHour" class="col-form-label">Ending Hour:</label>
+                <input type="time" class="form-control" asp-for="currentCourse.EndTime" value="@Model.currentCourse.EndTime" />
+            </div>
+            <div class="form-group">
+                <label for="recipient-editCredithours" class="col-form-label">Credit Hours:</label>
+                <input type="number" min="2" max="5" class="form-control" asp-for="currentCourse.CreditHours" value="@Model.currentCourse.CreditHours" />
+            </div>
+            <div class="form-group" style="position: absolute; visibility: hidden" >
+                <label for="recipient-editId" class="col-form-label">Id</label>
+                <input type="text" class="form-control" asp-for="currentCourse.Id" value="@Model.currentCourse.Id" />
+            </div>
+
+            <div class="d-flex flex-row-reverse bd-highlight">
+                <button type="submit" class="btn btn-primary mt-3 ml-3 mr-3">Save</button>
+                <a asp-page="/AddCourse" class="btn btn-secondary mt-3 ml-3 mr-3" role="button">Back</a>
+            </div>
+
+        </form>
+     </div>
+</div>

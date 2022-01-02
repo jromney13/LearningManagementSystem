@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+@using _5GuysLMS.Data;
+@using Microsoft.AspNetCore.Http;
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 5 Guys Repos and Cries</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/calendar/fullcalendar-5.9.0/lib/main.css" />
+    <script type="text/javascript" src="~/calendar/fullcalendar-5.9.0/lib/main.js"></script>
+    @RenderSection("styles", false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">5 Guys Repos and Cries LMS</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @*For security, resetting the password relies on setting a ResetPasswordValidatedUserID key in the session
+                            This query checks if there are any keys in the session that are not used for resetting the password
+                            If there are, then that means that the user is logged in*@
+                        @if (Context.Session.Keys.Where(k => k != "ResetPasswordValidatedUserID").Any())
+                        {
+                            <!--Put Links for logged in users here-->
+                            <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Dashboard">Home</a></li>
+                            <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Profile">Profile</a></li>
+                            <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Calendar">Calendar</a></li>
+                            <!-- Check if User is an instructor-->
+                            @if (Context.Session.GetString("UserType").Equals("Instructor"))
+                            {
+                                <!--Put Instructor Links here-->
+
+                                <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/AddCourse">Add&nbsp;Course</a></li>
+                            }
+
+                            @if (Context.Session.GetString("UserType").Equals("Student"))
+                            {
+                                <!--Put Student Links here-->
+
+                                <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Enroll">Enroll</a></li>
+                                <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Tuition">Tuition</a></li>
+                            }
+                            <!--Notifications-->
+                            <li class="nav-item offset-xl-7 offset-lg-5 cursor-pointer">
+                                @*The data-content is the HTML that is rendered when the popover is opened.
+                                    It calls the CreatedNotification.RenderListAsHTML and the GradedNotification.RenderListAsHTML methods to display HTML for the notifications.
+                                    These methods have two parameters, a list of notifications and a string queryString.
+                                    The list of notifications is grabbed from the session using the GetComplexData method.
+                                    The queryString, which is the values passed in the URL, is grabbed by using the Context.Request.QueryString.
+                                    Importantly, only the portion not related to the notification queries themselves should be passed in.
+                                    This is why the SubString is used if the QueryString contains "notificationID"*@
+                                <img src=@Models.GradedNotification.RenderNotificationSrcAsHTML((Context.Session.GetComplexData<List<Models.CreatedNotification>>("CreatedNotifications") != null && Context.Session.GetComplexData<List<Models.CreatedNotification>>("CreatedNotifications").Count > 0) ||
+                                        (Context.Session.GetComplexData<List<Models.GradedNotification>>("GradedNotifications") != null && Context.Session.GetComplexData<List<Models.GradedNotification>>("GradedNotifications").Count > 0))
+                                     class="mt-2 p-0" id="imgNotification" data-toggle="popover" data-trigger="manual" data-title="Notifications" data-container="body" data-html="true"
+                                     data-content='@Models.CreatedNotification.RenderListAsHTML(Context.Session.GetComplexData<List<Models.CreatedNotification>>("CreatedNotifications"),
+                                                   Context.Request.QueryString.ToString().Contains("notificationID")?
+                                                   Context.Request.QueryString.ToString().Substring(0, Context.Request.QueryString.ToString().IndexOf("notificationID")-1):
+                                                   Context.Request.QueryString.ToString())
+                                                   @Models.GradedNotification.RenderListAsHTML(Context.Session.GetComplexData<List<Models.GradedNotification>>("GradedNotifications"),
+                                                   Context.Request.QueryString.ToString().Contains("notificationID")?
+                                                   Context.Request.QueryString.ToString().Substring(0, Context.Request.QueryString.ToString().IndexOf("notificationID")-1):
+                                                   Context.Request.QueryString.ToString())' />
+                            </li>
+                            <!--Profile Picture-->
+                            <li class="nav-item"><a class="nav-link text-dark m-0 px-sm-2 px-0 py-2" asp-area="" asp-page="/Profile"><img class="rounded-circle" width="37" height="37" src="@Context.Session.GetString("UserProfilePicture")" /></a></li>
+                            <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Logout">Logout</a></li>
+
+                        }
+                        else
+                        {
+                            <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a></li>
+                            <li class="nav-item mt-1"><a class="nav-link text-dark" asp-area="" asp-page="/Register">Registration</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="mb-5 pb-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - 5 Guys Repos and Cries
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

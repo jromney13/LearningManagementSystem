@@ -1,0 +1,43 @@
+﻿@page
+@model _5GuysLMS.Pages.TESTProflePictureUploadModel
+
+@{
+    ViewData["Title"] = "Profile Picture Upload Test Page";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <input type="file" class="form-control-file" asp-for="UploadedFile"/>
+            <br />
+            <br />
+
+            <div class="form-group">
+                <input type="submit" value="Upload and Display" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @if (Model.ProfilePicture != null)
+    {
+
+        <h2>@Model.ProfilePicture.ImageTitle</h2>
+        <img src="@Model.ProfilePicture.GenerateURL()" />
+
+    }
+
+</div>
+<div>
+    <a asp-page="Index">Back to Home</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

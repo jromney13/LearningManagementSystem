@@ -1,0 +1,115 @@
+﻿@page
+@model _5GuysLMS.Pages.SubmissionsModel
+@{
+}
+
+<h1>Submissions</h1>
+<br />
+<h2>@Model.assignment.AssignmentTitle</h2>
+<div class="row" style="margin-top: 30px">
+    <div class="col-2"><h5>Due Date:</h5></div>
+    <div class="col-1 offset-1"><h5>Max Points:</h5></div>
+    <div class="col-3 offset-1"><h5>Description:</h5></div>
+</div>
+<div class="row">
+    <div class="col-2">@Model.assignment.DueDate</div>
+    <div class="col-1 offset-1">@Model.assignment.MaxPoints</div>
+    <div class="col-3 offset-1">@Model.assignment.Description</div>
+</div>
+
+<div style="margin-top: 20px">
+    <div class="row">
+        <div class="col-lg-9 col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Student's Name
+                        </th>
+                        <th>
+                            Late
+                        </th>
+                        <th>
+                            Score
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.assignment.SubmissionType == "Text")
+                    {
+                        @foreach (var item in Model.textSubmissions)
+                        {
+                    <tr>
+                        <td>
+                            @item.User.FirstName @item.User.LastName
+                        </td>
+                        <td>
+                            @if (item.IsLate == true)
+                            {
+                                <span style="color: red">Late</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsGraded == true)
+                            {
+                                @item.PointsReceived
+                            }
+                            else { 
+                                <span>Not Graded</span>
+                            }
+
+                        </td>
+                        <td>
+                            <form method="post">
+                                <div>
+                                    <a asp-page="/GradeAssignment" asp-route-id="@item.Id" asp-route-subType="@Model.assignment.SubmissionType" class="btn btn-primary btn-sm">Grade Assignment</a>
+                                </div>
+                            </form>
+
+                        </td>
+                    </tr>
+                        }
+                    }
+                    @if (Model.assignment.SubmissionType == "File")
+                    {
+                        @foreach (var item in Model.fileSubmissions)
+                        {
+                            <tr>
+                                <td>
+                                    @item.User.FirstName @item.User.LastName
+                                </td>
+                                <td>
+                                    @if(item.IsLate == true) { 
+                                      <span style="color: red">Late</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsGraded == true)
+                                    {
+                                        @item.PointsReceived
+                                    }
+                                    else
+                                    {
+                                        <span>Not Graded</span>
+                                    }
+                                </td>
+                                <td>
+                                    <form method="post">
+                                        <div>
+                                            <a asp-page="/GradeAssignment" asp-route-id="@item.Id" asp-route-subType="@Model.assignment.SubmissionType"  class="btn btn-primary btn-sm">Grade Assignment</a>
+                                        </div>
+                                    </form>
+                                        
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,119 @@
+﻿@page
+@model _5GuysLMS.Pages.GradeAssignmentModel
+@{
+}
+
+<h1>@Model.assignment.AssignmentTitle.</h1>
+<div class="row" style="margin-top: 30px">
+    <div class="col-2"><h5>Due Date:</h5></div>
+    <div class="col-1 offset-1"><h5>Max Points:</h5></div>
+    <div class="col-6 offset-1"><h5>Description:</h5></div>
+</div>
+<div class="row" style="border-bottom: solid; padding-bottom: 30px">
+    <div class="col-2">@Model.assignment.DueDate</div>
+    <div class="col-1 offset-1">@Model.assignment.MaxPoints</div>
+    <div class="col-3 offset-1">@Model.assignment.Description</div>
+</div>
+<div style="margin-top: 40px">
+    @if (Model.assignment.SubmissionType == "Text")
+    {
+        <div class="row">
+            <div class="col-4">
+                <h2>@Model.textSubmission.User.FirstName @Model.textSubmission.User.LastName</h2>
+            </div>
+            <div class="col-3 offset-1">
+                @if (Model.textSubmission.IsGraded == true)
+                {
+                    <h3>Score:  @Model.textSubmission.PointsReceived</h3>
+                }
+                else
+                {
+                    <h3>Score: Not Graded</h3>
+                }
+
+            </div>
+        </div>
+
+        <div>
+            @if (Model.textSubmission.IsLate == true)
+            {<h3 style="color: red">Late</h3> }
+            else
+            {<span></span>}
+        </div>
+        <div>Text Submission: </div>
+        <div class="col-9 offset-2">@Model.textSubmission.TextContent</div>
+        <div>
+
+        </div>
+    }
+    else
+    {
+
+        <div class="row">
+            <div class="col-4">
+                <h2>@Model.fileSubmission.User.FirstName @Model.fileSubmission.User.LastName</h2>
+            </div>
+            <div class="col-3 offset-1">
+                @if (Model.fileSubmission.IsGraded == true)
+                {
+                    <h3>Score:  @Model.fileSubmission.PointsReceived</h3>
+                }
+                else
+                {
+                    <h3>Score: Not Graded</h3>
+                }
+
+            </div>
+        </div>
+        <div>
+            @if (Model.fileSubmission.IsLate == true)
+            {<h3 style="color: red">Late</h3> }
+            else
+            {<span></span>}
+        </div>
+        <div>Download File Submission: </div>
+        <div style="margin-top: 10px">
+            <form method="post">
+                <label>@Model.fileSubmission.fileName</label>
+                <button href="/GradeAssignment" type="submit" asp-page-handler="DownloadFile" asp-route-fileName="@Model.fileSubmission.savedName"
+                        asp-route-id="@Model.submissionId" asp-route-subType="@Model.assignment.SubmissionType">Download</button>
+            </form>
+            
+
+        </div>
+    }
+
+</div>
+
+<button type="button" class="btn btn-primary btn-lg mt-5" data-toggle="modal" data-target="#myModalScore">Grade</button>
+
+<div class="modal fade" id="myModalScore" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Grade Assignment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+
+                    <div class="form-group">
+                        <label for="recipient-score" class="col-form-label">Score:</label>
+                        <input type="number" min="0" max="@Model.assignment.MaxPoints" class="form-control" asp-for="textSubmission.PointsReceived" />
+                        <h4>/@Model.assignment.MaxPoints</h4>
+                    </div>
+
+
+
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                        <button type="submit" class="btn btn-primary mt-3 ml-3 mr-3" asp-route-subId="@Model.submissionId" asp-route-subType="@Model.assignment.SubmissionType">Save</button>
+                        <button type="button" class="btn btn-secondary mt-3 ml-3 mr-3" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
